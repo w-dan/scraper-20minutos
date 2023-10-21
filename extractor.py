@@ -1,7 +1,7 @@
 import re
 import requests
 import pandas as pd
-from globals import HEADERS, BASE_URL
+from globals import HEADERS, BASE_URL, MAX_DEPTH
 
 
 def get_page_text(url: str) -> str:
@@ -17,6 +17,33 @@ def get_page_text(url: str) -> str:
         response = "error"
 
     return response.text
+
+
+def crawl_links(url: str, depth: int):
+    """
+        Crawls through every link in the list to get related news to the
+        specified depth.
+
+        Parameters: URL (string), depth (int)
+        Returns: itself XD
+
+        [!!!!!!!!!] Problems: depth is not properly calculated
+    """
+    if depth == 0:
+        return 
+
+    html_text = get_page_text(url)
+    news_links = get_related_links(html_text)
+
+    # God forgive me for what I am about to code
+    global news_data
+    for link in news_links:
+        news_data = news_data._append({'link': link, 'depth': MAX_DEPTH - depth}, ignore_index=True)
+
+    # Recursively crawl related links
+    for link in news_links:
+        crawl_links(link, depth - 1)
+
 
 
 def get_related_links(html_text: str) -> list:
@@ -46,14 +73,10 @@ if __name__ == '__main__':
 
 
 
-
-
-
-    """
+    # Crawl related links with the specified depth
     for link in news_links:
-        news_data = news_data._append({'link': link, 'depth': 0}, ignore_index=True)
-    
-    print(news_data)
-    """
+        crawl_links(link, MAX_DEPTH)
 
+
+    print(news_data)
 
