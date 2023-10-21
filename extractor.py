@@ -3,19 +3,12 @@ import requests
 import pandas as pd
 from globals import HEADERS, BASE_URL
 
-class News:
-    def __init__(self):      # n_jobs??
-        self.related_news = []
-        # self.date = None                 # <span class="article-date">
-        # self.author = None               # <span class="article-author">, contains a href with author name
-        # self.url = None
-        # self.title = None
-
 
 def get_page_text(url: str) -> str:
     """
         Gets a news page in plain HTML as a string, for depth 0 news.
 
+        Parameters: a string representing a URL
         Returns: string
     """
     response = requests.get(url)
@@ -26,13 +19,13 @@ def get_page_text(url: str) -> str:
     return response.text
 
 
-def extract_related_links(html_text: str) -> list:
+def get_related_links(html_text: str) -> list:
     """
         Extracts news links from a page, be it the landing page or any news page.
         By news we understand exclusively this newspaper's articles.
         This is achieved by detecting <a> tags and extracting the links they contain.
         
-        Parameters: a string object 
+        Parameters: HTML text as a string
         Returns: list
     """
     regex = r'<a[^>]*\s*href=["\'](https?://[^"\']+)["\']'
@@ -43,15 +36,24 @@ def extract_related_links(html_text: str) -> list:
     return related_links
 
 
+
 if __name__ == '__main__':
-    data = pd.DataFrame(columns=['link', 'depth'])
+    news_data = pd.DataFrame(columns=['link', 'depth'])
 
     # This is the starting point to get the first batch of links to news. 
     landing_page_news = get_page_text(BASE_URL)
-    main_news_links = extract_related_links(landing_page_news)
+    news_links = get_related_links(landing_page_news)
 
-    print("----------------------------------------------------------------------------------")
-    print(main_news_links)    
-    print("----------------------------------------------------------------------------------")
-    print(type(main_news_links))
-    print(len(main_news_links))
+
+
+
+
+
+    """
+    for link in news_links:
+        news_data = news_data._append({'link': link, 'depth': 0}, ignore_index=True)
+    
+    print(news_data)
+    """
+
+
