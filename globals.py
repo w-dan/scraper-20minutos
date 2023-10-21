@@ -1,4 +1,5 @@
 BASE_URL = "https://www.20minutos.es/"
+DEPTH = 0
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0",

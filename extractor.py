@@ -1,6 +1,6 @@
 import re
 import requests
-import json
+import pandas as pd
 from globals import HEADERS, BASE_URL
 
 class News:
@@ -12,14 +12,14 @@ class News:
         # self.title = None
 
 
-def get_landing_page() -> str:
+def get_page_text(url: str) -> str:
     """
-        Gets the landing page in plain HTML as a string, for depth 0 news.
+        Gets a news page in plain HTML as a string, for depth 0 news.
         This is the starting point to get the first batch of links to news. 
 
         Returns: string
     """
-    response = requests.get(BASE_URL)
+    response = requests.get(url)
 
     if response.status_code != 200:
         response = "error"
@@ -31,7 +31,8 @@ def extract_related_links(html_text: str) -> list:
     """
         Extracts news links from a page, be it the landing page or any news page.
         By news we understand exclusively this newspaper's articles.
-
+        This is achieved by detecting <a> tags and extracting the links they contain.
+        
         Parameters: a string object 
         Returns: list
     """
@@ -44,7 +45,8 @@ def extract_related_links(html_text: str) -> list:
 
 
 if __name__ == '__main__':
-    main_news = get_landing_page()
+    data = pd.DataFrame(columns=['link', 'depth'])
+    main_news = get_page_text(BASE_URL)
     relevant_links = extract_related_links(main_news)
 
     print("----------------------------------------------------------------------------------")
