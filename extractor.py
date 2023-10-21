@@ -15,7 +15,6 @@ class News:
 def get_page_text(url: str) -> str:
     """
         Gets a news page in plain HTML as a string, for depth 0 news.
-        This is the starting point to get the first batch of links to news. 
 
         Returns: string
     """
@@ -46,11 +45,13 @@ def extract_related_links(html_text: str) -> list:
 
 if __name__ == '__main__':
     data = pd.DataFrame(columns=['link', 'depth'])
-    main_news = get_page_text(BASE_URL)
-    relevant_links = extract_related_links(main_news)
+
+    # This is the starting point to get the first batch of links to news. 
+    landing_page_news = get_page_text(BASE_URL)
+    main_news_links = extract_related_links(landing_page_news)
 
     print("----------------------------------------------------------------------------------")
-    print(relevant_links)    
+    print(main_news_links)    
     print("----------------------------------------------------------------------------------")
-    print(type(relevant_links))
-    print(len(relevant_links))
+    print(type(main_news_links))
+    print(len(main_news_links))
